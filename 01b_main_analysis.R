@@ -3,9 +3,9 @@
 ## Veronica Ballerini, Marina Bottomley, Michelle L. Bell, Francesca Dominici ##
 ################### Code author: Veronica Ballerini ############################
 ################### Last modified: January 10, 2026 ############################
-## This code reproduces Fig. 3, results of the meta-analysis reported in text in
-## the manuscript, Table S1 and Table S2 (line "Total") in the Supplementary ###
-## Materials. ##################################################################
+## This code reproduces Fig. 2, Fig. 3, results of the meta-analysis reported in
+## text in the manuscript, Table S1 and Table S2 (line "Total") in the #########
+## Supplementary Materials. ####################################################
 ################################################################################
 
 # clean environment
