@@ -8,6 +8,9 @@
 ## Materials. ##################################################################
 ################################################################################
 
+# clean environment
+rm(list=ls())
+
 # set the seed
 set.seed(42)
 
@@ -256,7 +259,7 @@ saveRDS(s_res2014, file = paste0(project.dir,"/main_results/meta_analysis_200520
 saveRDS(s_res2009_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052009.rds"))
 saveRDS(s_res2012_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052012.rds"))
 saveRDS(s_res2014_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052014.rds"))
-saveRDS(table1, file = paste0(project.dir,"/main_results/TableS2_total.rds"))
+saveRDS(table1, file = paste0(project.dir,"/tables/TableS2_total.rds"))
 
 ### Table for the supplementary material
 # Word
