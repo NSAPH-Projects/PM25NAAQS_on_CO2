@@ -246,7 +246,7 @@ saveRDS(s_res2014, file = paste0(project.dir,"/main_results/meta_analysis_200520
 saveRDS(s_res2009_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052009_residential.rds"))
 saveRDS(s_res2012_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052012_residential.rds"))
 saveRDS(s_res2014_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052014_residential.rds"))
-saveRDS(table1, file = paste0(project.dir,"/main_results/TableS2_residential.rds"))
+saveRDS(table1, file = paste0(project.dir,"/tables/TableS2_residential.rds"))
 
 ### Table for the supplementary material
 # Word
@@ -322,7 +322,7 @@ summary_df$State <- factor(summary_df$State, levels = state_order)
 okabe_ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
                "#CC79A7", "#000000")
 
-jpeg(file = paste0(project.dir,"/plots/residential/FigS6.jpeg"),
+jpeg(file = paste0(project.dir,"/plots/FigS6.jpeg"),
      width = 10470, height = 4590, units = "px", res = 1000)
 ggplot(summary_df, aes(x = State, y = mean, color = Year, group = Year)) +
   geom_point(position = position_dodge(width = 0.5), size = 1.8) +

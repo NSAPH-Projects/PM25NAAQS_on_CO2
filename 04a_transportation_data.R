@@ -7,7 +7,6 @@
 ## the manuscript. #############################################################
 ################################################################################
 
-
 # clean environment
 rm(list=ls())
 
@@ -198,5 +197,4 @@ final_data <- CO2_long %>%
   left_join(merged_df, by= c("Year", "State"))
 
 #### SAVE
-rm(list=setdiff(ls(), list("final_data","n_until2015","project.dir")))
-save.image(paste0(project.dir,"/final_data_transportation.RData"))
+save(final_data,n_until2015,file=paste0(project.dir,"/final_data_transportation.RData"))

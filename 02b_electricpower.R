@@ -252,7 +252,7 @@ saveRDS(s_res2014, file = paste0(project.dir,"/main_results/meta_analysis_200520
 saveRDS(s_res2009_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052009_electricpower.rds"))
 saveRDS(s_res2012_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052012_electricpower.rds"))
 saveRDS(s_res2014_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052014_electricpower.rds"))
-saveRDS(table1, file = paste0(project.dir,"/main_results/TableS2_electricpower.rds"))
+saveRDS(table1, file = paste0(project.dir,"/tables/TableS2_electricpower.rds"))
 
 ### Table for the supplementary material
 # Word
