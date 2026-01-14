@@ -3,7 +3,8 @@
 ## Veronica Ballerini, Marina Bottomley, Michelle L. Bell, Francesca Dominici ##
 ################### Code author: Veronica Ballerini ############################
 ################### Last modified: January 10, 2026 ############################
-## This code 
+## This code reproduces Fig. S8 and in text results of the section "Fracking" in
+## the Supplementary Materials. ################################################
 ################################################################################
 
 rm(list = ls())
@@ -25,14 +26,36 @@ df2009$fracking<-ifelse(df2009$State%in%fracking$State[which(fracking$fracking20
 df2012$fracking<-ifelse(df2012$State%in%fracking$State[which(fracking$fracking2012==1)],1,0)
 df2014$fracking<-ifelse(df2014$State%in%fracking$State[which(fracking$fracking2014==1)],1,0)
 
-reg_2009_fr <- rma(yi = cum_effect_rel, sei = sd_rel,  method = "REML", mods = ~ as.factor(fracking), 
+reg_2009_fr <- rma(yi = cum_effect, sei = sd,  method = "REML", mods = ~ as.factor(fracking), 
                    data = df2009)
+s_reg2009_fr <- summary(reg_2009_fr)
 
-reg_2012_fr <- rma(yi = cum_effect_rel, sei = sd_rel,  method = "REML", mods = ~ as.factor(fracking), 
+reg_2009_rel_fr <- rma(yi = cum_effect_rel, sei = sd_rel,  method = "REML", mods = ~ as.factor(fracking), 
+                   data = df2009)
+s_reg2009_rel_fr <- summary(reg_2009_rel_fr)
+
+reg_2012_fr <- rma(yi = cum_effect, sei = sd,  method = "REML", mods = ~ as.factor(fracking), 
                    data = df2012)
+s_reg2012_fr <- summary(reg_2012_fr)
 
-reg_2014_fr <- rma(yi = cum_effect_rel, sei = sd_rel,  method = "REML", mods = ~ as.factor(fracking), 
+reg_2012_rel_fr <- rma(yi = cum_effect_rel, sei = sd_rel,  method = "REML", mods = ~ as.factor(fracking), 
+                       data = df2012)
+s_reg2012_rel_fr <- summary(reg_2012_rel_fr)
+
+reg_2014_fr <- rma(yi = cum_effect, sei = sd,  method = "REML", mods = ~ as.factor(fracking), 
                    data = df2014)
+s_reg2014_fr <- summary(reg_2014_fr)
+
+reg_2014_rel_fr <- rma(yi = cum_effect_rel, sei = sd_rel,  method = "REML", mods = ~ as.factor(fracking), 
+                       data = df2014)
+s_reg2014_rel_fr <- summary(reg_2014_rel_fr)
+
+saveRDS(s_res2009, file = paste0(project.dir,"/main_results/meta_analysis_20052009_fracking.rds"))
+saveRDS(s_res2012, file = paste0(project.dir,"/main_results/meta_analysis_20052012_fracking.rds"))
+saveRDS(s_res2014, file = paste0(project.dir,"/main_results/meta_analysis_20052014_fracking.rds"))
+saveRDS(s_res2009_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052009_fracking.rds"))
+saveRDS(s_res2012_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052012_fracking.rds"))
+saveRDS(s_res2014_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052014_fracking.rds"))
 
 # 3. Add year and combine state results for different time frames
 df2009$Year <- "2005-2009"

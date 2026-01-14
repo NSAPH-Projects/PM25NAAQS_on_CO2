@@ -44,7 +44,6 @@ library(metafor) #for meta-analysis
 library(CausalArima)
 
 # upload modified script to customize plots of the CausalArima package
-source("00_modified_plot.R")
 source("00_modified_library.R")
 
 ################################################################################
