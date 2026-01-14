@@ -301,7 +301,7 @@ ft <- autofit(ft)
 
 doc <- read_docx()
 doc <- body_add_flextable(doc, ft)
-print(doc, target = "TableS1.docx")
+print(doc, target = "tables/TableS1.docx")
 
 ################################# boxplots
 states <- rbind(matrix(df2009$State,ncol=1),"U.S.")
