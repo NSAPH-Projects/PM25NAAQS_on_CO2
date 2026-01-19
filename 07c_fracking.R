@@ -94,9 +94,9 @@ extract_group_meta <- function(m.rma, year_label) {
 }
 
 meta_points <- bind_rows(
-  extract_group_meta(reg_2009_fr, "2005-2009"),
-  extract_group_meta(reg_2012_fr, "2005-2012"),
-  extract_group_meta(reg_2014_fr, "2005-2014")
+  extract_group_meta(reg_2009_rel_fr, "2005-2009"),
+  extract_group_meta(reg_2012_rel_fr, "2005-2012"),
+  extract_group_meta(reg_2014_rel_fr, "2005-2014")
 )
 
 # 6. Construct plot dataset
