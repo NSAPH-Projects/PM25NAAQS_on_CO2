@@ -2,9 +2,9 @@
 ## The impact of PM2.5 National Ambient Air Quality Standards on CO2 emissions #
 ## Veronica Ballerini, Marina Bottomley, Michelle L. Bell, Francesca Dominici ##
 ################### Code author: Veronica Ballerini ############################
-################### Last modified: January 10, 2026 ############################
-## This code reproduces Fig. S8 and in text results of the section "Fracking" in
-## the Supplementary Materials. ################################################
+################### Last modified: August 25 10, 2026 ##########################
+## This code reproduces Fig. S8 and in text results of the section "Natural gas 
+## shifting" in the Supplementary Materials. ###################################
 ################################################################################
 
 rm(list = ls())
