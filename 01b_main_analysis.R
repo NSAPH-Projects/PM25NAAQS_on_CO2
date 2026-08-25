@@ -89,12 +89,10 @@ for(s in unique(final_data$State)){
   ce <- CausalArima(y = ts(data$CO2,start = 1, frequency = 1), 
                     xreg = data[,c("Population","Oil_Price","Temperature",
                                    "Precipitation",
-                                   #"renew",
                                    "gdp")],
                     dates = dates, 
                     int.date = int.date, nboot = 1000)
   
-  #residuals<-plot(ce, type="residuals")
   summary[[i]]<-impact(ce)
   
   ce_cum_0509 <- sum(ce$causal.effect[4:8])
