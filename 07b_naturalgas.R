@@ -6,7 +6,7 @@
 ## This code identifies the states for which there is a significant increase in
 ## CO2 emissions from natural gas; this information in used to test the ########
 ## assumption that the overall observed reduction in CO2 emissions is not due to
-## the new fracking (Supplementary Materials). #################################
+## the new natural gas shifting (Supplementary Materials). #####################
 ################################################################################
 
 # set the seed
