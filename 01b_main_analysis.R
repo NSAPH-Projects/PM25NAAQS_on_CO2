@@ -1,10 +1,10 @@
 ################################################################################
 ## The impact of PM2.5 National Ambient Air Quality Standards on CO2 emissions #
-## Veronica Ballerini, Marina Bottomley, Michelle L. Bell, Francesca Dominici ##
+# Veronica Ballerini, Marina L. Bottomley, Michelle L. Bell, Francesca Dominici#
 ################### Code author: Veronica Ballerini ############################
 ################### Last modified: January 10, 2026 ############################
 ## This code reproduces Fig. 2, Fig. 3, results of the meta-analysis reported in
-## text in the manuscript, Table S1 and Table S2 (line "Total") in the #########
+## text in the manuscript, Table S1, Table S2 (line "Total") and Fig. S9 in the#
 ## Supplementary Materials. ####################################################
 ################################################################################
 
@@ -66,7 +66,7 @@ start<-as.numeric(strftime(as.Date(dates[1], "%Y-%m-%d"), "%u"))
 
 ############################ Main analysis #####################################
 int.date <- as.Date("2002-01-01")
-#horizon<-as.Date(c("2005-01-01","2009-01-01","2012-01-01","2014-01-01")) # add horizons
+horizon<-as.Date(c("2005-01-01","2009-01-01","2012-01-01","2014-01-01")) # add horizons
 
 # # C-ARIMA model
 effect_cum_0509<-NULL
@@ -79,6 +79,8 @@ per_boxplot_2009<-matrix(NA,48,1000)
 per_boxplot_2012<-matrix(NA,48,1000)
 per_boxplot_2014<-matrix(NA,48,1000)
 
+summary<-list()
+
 i<-NULL
 
 for(s in unique(final_data$State)){
@@ -87,14 +89,13 @@ for(s in unique(final_data$State)){
   ce <- CausalArima(y = ts(data$CO2,start = 1, frequency = 1), 
                     xreg = data[,c("Population","Oil_Price","Temperature",
                                    "Precipitation",
+                                   #"renew",
                                    "gdp")],
                     dates = dates, 
                     int.date = int.date, nboot = 1000)
   
-  # jpeg(file=paste(project.dir,"/plots/state-series/",s,".jpeg",sep=""), #here you can find Fig.2 titled "TX.jpeg"
-  #      width = 7083, height = 5436, units = "px", res = 1000)
-  # print(plot(ce, type="custom", horizon=horizon, main = paste(s)))
-  # dev.off()
+  #residuals<-plot(ce, type="residuals")
+  summary[[i]]<-impact(ce)
   
   ce_cum_0509 <- sum(ce$causal.effect[4:8])
   counter_0505 <- sum(ce$forecast[4:8])
@@ -364,4 +365,54 @@ ggplot(summary_df, aes(x = State, y = mean, color = Year, group = Year)) +
   )
 dev.off()
 
+### Goodness of fit metrics (Fig. S9)
+
+MPE <- NULL
+for(i in 1:48){
+  MPE<-cbind(MPE,summary[[i]]$arima$accuracy[4])
+}
+
+MASE <- NULL
+for(i in 1:48){
+  MASE<-cbind(MASE,summary[[i]]$arima$accuracy[6])
+}
+
+ACF1 <- NULL
+for(i in 1:48){
+  ACF1<-cbind(ACF1,summary[[i]]$arima$accuracy[7])
+}
+
+df_summaries <- data.frame(
+  MPE  = as.numeric(MPE),
+  MASE = as.numeric(MASE),
+  ACF1 = as.numeric(ACF1)
+)
+
+df_long <- df_summaries |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Metric",
+    values_to = "Value"
+  )
+
+df_long$Metrica <- factor(
+  df_long$Metrica,
+  levels = c("MPE", "MASE", "ACF1")
+)
+
+jpeg(file = paste0(project.dir,"/plots/FigS9.jpeg"),
+     width = 10470, height = 4590, units = "px", res = 1000)
+ggplot(df_long, aes(x = Metric, y = Value)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 1, color = "gray", linetype = "dashed") +
+  geom_hline(yintercept = 0, color = "gray", linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(hjust = 1)  
+  ) +
+  labs(x = NULL, y = NULL)
+dev.off()
+
+### Save data
 save.image("main_analysis.RData")
+
