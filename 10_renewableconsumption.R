@@ -64,7 +64,7 @@ start<-as.numeric(strftime(as.Date(dates[1], "%Y-%m-%d"), "%u"))
 
 ############################ Main analysis #####################################
 int.date <- as.Date("2002-01-01")
-horizon<-as.Date(c("2005-01-01","2009-01-01","2012-01-01","2014-01-01")) # add horizons
+#horizon<-as.Date(c("2005-01-01","2009-01-01","2012-01-01","2014-01-01")) # add horizons
 
 # # C-ARIMA model
 effect_cum_0509<-NULL
