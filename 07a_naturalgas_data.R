@@ -33,7 +33,7 @@ library(stringr)
 
 destfile <- "co2_source.xlsx"
 
-## Load the "Total" CO2 emissions sheet and skip the first row, which is empty
+## Load the "Natural gas" CO2 emissions sheet and skip the first row, which is empty
 data <- read_excel(destfile, sheet = 3, skip = 1)
 head(data)
 
