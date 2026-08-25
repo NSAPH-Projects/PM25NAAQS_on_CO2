@@ -240,22 +240,22 @@ colnames(table1)<-c("2005-2009","2005-2009 rel",
                     "2005-2014","2005-2014 rel")
 rownames(table1)<-c("effect","S.E.")
 
-saveRDS(res_2009, file = paste0(project.dir,"/supplementary_results/fracking_20052009.rds"))
-saveRDS(res_2012, file = paste0(project.dir,"/supplementary_results/fracking_20052012.rds"))
-saveRDS(res_2014, file = paste0(project.dir,"/supplementary_results/fracking_20052014.rds"))
-saveRDS(res_2009_rel, file = paste0(project.dir,"/supplementary_results/fracking_rel_20052009.rds"))
-saveRDS(res_2012_rel, file = paste0(project.dir,"/supplementary_results/fracking_rel_20052012.rds"))
-saveRDS(res_2014_rel, file = paste0(project.dir,"/supplementary_results/fracking_rel_20052014.rds"))
+saveRDS(res_2009, file = paste0(project.dir,"/supplementary_results/naturalgasshifting_20052009.rds"))
+saveRDS(res_2012, file = paste0(project.dir,"/supplementary_results/naturalgasshifting_20052012.rds"))
+saveRDS(res_2014, file = paste0(project.dir,"/supplementary_results/naturalgasshifting_20052014.rds"))
+saveRDS(res_2009_rel, file = paste0(project.dir,"/supplementary_results/naturalgasshifting_rel_20052009.rds"))
+saveRDS(res_2012_rel, file = paste0(project.dir,"/supplementary_results/naturalgasshifting_rel_20052012.rds"))
+saveRDS(res_2014_rel, file = paste0(project.dir,"/supplementary_results/naturalgasshifting_rel_20052014.rds"))
 saveRDS(table1, file = paste0(project.dir,"/supplementary_results/Table_naturalgas.rds"))
 
 increase_ng_2009 <- df2009$State[which(df2009$bi_pval<(0.05/48)&df2009$cum_effect>0)]
 increase_ng_2012 <- df2012$State[which(df2012$bi_pval<(0.05/48)&df2012$cum_effect>0)]
 increase_ng_2014 <- df2014$State[which(df2014$bi_pval<(0.05/48)&df2014$cum_effect>0)]
 
-fracking <- data.frame(State = df2009$State)
+naturalgasshifting <- data.frame(State = df2009$State)
 
-fracking$fracking2009 <- ifelse(df2009$State%in%increase_ng_2009,1,0)
-fracking$fracking2012 <- ifelse(df2012$State%in%increase_ng_2012,1,0)
-fracking$fracking2014 <- ifelse(df2014$State%in%increase_ng_2014,1,0)
+naturalgasshifting$naturalgasshifting2009 <- ifelse(df2009$State%in%increase_ng_2009,1,0)
+naturalgasshifting$naturalgasshifting2012 <- ifelse(df2012$State%in%increase_ng_2012,1,0)
+naturalgasshifting$naturalgasshifting2014 <- ifelse(df2014$State%in%increase_ng_2014,1,0)
 
-write.table(fracking, "increase_naturalgas.txt")
+write.table(naturalgasshifting, "increase_naturalgas.txt")
