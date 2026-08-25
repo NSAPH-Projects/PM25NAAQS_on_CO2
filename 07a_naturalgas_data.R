@@ -5,7 +5,8 @@
 ################### Last modified: January 10, 2026 ############################
 ## This code builds the dataset about CO2 emissions from natural gas used to ###
 ## produce results in the Supplementary Materials (testing the assumption that #
-## the observed reduction in CO2 emissions is not due to the new fracking). ####
+## the observed reduction in CO2 emissions is not due to the new natural gas ###
+## shifting). ##################################################################
 ################################################################################
 
 # clean environment
