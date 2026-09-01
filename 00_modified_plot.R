@@ -206,9 +206,9 @@ plot.cArima <- function(x, type = c("forecast", "impact", "residuals", "custom")
   
   period_colors <- c(
     "Intervention (2002-2004)" = "grey80",
-    "Evaluation (2005-2009)" = "green4",
-    "Evaluation (2005-2012)" = "goldenrod1",
-    "Evaluation (2005-2014)" = "salmon2"
+    "Evaluation (2005-2009)" = "#E69F00",
+    "Evaluation (2005-2012)" = "#56B4E9",
+    "Evaluation (2005-2014)" = "#009E73"
   )
   period_fills <- c(
     "Intervention (2002-2004)" = NA,
