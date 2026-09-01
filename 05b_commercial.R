@@ -70,6 +70,14 @@ per_boxplot_2009<-matrix(NA,48,1000)
 per_boxplot_2012<-matrix(NA,48,1000)
 per_boxplot_2014<-matrix(NA,48,1000)
 
+per_cumUS_2009<-matrix(NA,48,1000)
+per_cumUS_2012<-matrix(NA,48,1000)
+per_cumUS_2014<-matrix(NA,48,1000)
+
+denom_per_cumUS_2009<-matrix(NA,48,1000)
+denom_per_cumUS_2012<-matrix(NA,48,1000)
+denom_per_cumUS_2014<-matrix(NA,48,1000)
+
 i<-NULL
 
 for(s in unique(final_data$State)){
@@ -78,6 +86,7 @@ for(s in unique(final_data$State)){
   ce <- CausalArima(y = ts(data$CO2,start = 1, frequency = 1), 
                     xreg = data[,c("Population","Oil_Price","Temperature",
                                    "Precipitation",
+                                   #"renew",
                                    "gdp")],
                     dates = dates, 
                     int.date = int.date, nboot = 1000)
@@ -161,9 +170,40 @@ for(s in unique(final_data$State)){
   per_boxplot_2012[i,]<-cum_distr_0512/apply(ce$boot$boot.distrib[4:11,],2,sum)
   per_boxplot_2014[i,]<-cum_distr_0514/apply(ce$boot$boot.distrib[4:13,],2,sum)
   
+  per_cumUS_2009[i,]<-cum_distr_0509
+  per_cumUS_2012[i,]<-cum_distr_0512
+  per_cumUS_2014[i,]<-cum_distr_0514
+  
+  denom_per_cumUS_2009[i,]<-apply(ce$boot$boot.distrib[4:8,],2,sum)
+  denom_per_cumUS_2012[i,]<-apply(ce$boot$boot.distrib[4:11,],2,sum)
+  denom_per_cumUS_2014[i,]<-apply(ce$boot$boot.distrib[4:13,],2,sum)
+  
   rowtable_names<-rbind(rowtable_names,s)
   
 }
+
+### US TOT ###
+per_cumUS_2009 <- apply(per_cumUS_2009, 2, sum)
+per_cumUS_2012 <- apply(per_cumUS_2012, 2, sum)
+per_cumUS_2014 <- apply(per_cumUS_2014, 2, sum)
+
+denom_per_cumUS_2009 <- apply(denom_per_cumUS_2009, 2, sum)
+denom_per_cumUS_2012 <- apply(denom_per_cumUS_2012, 2, sum)
+denom_per_cumUS_2014 <- apply(denom_per_cumUS_2014, 2, sum)
+
+rel_US_2009 <- per_cumUS_2009/denom_per_cumUS_2009
+rel_US_2012 <- per_cumUS_2012/denom_per_cumUS_2012
+rel_US_2014 <- per_cumUS_2014/denom_per_cumUS_2014
+
+p2009 <- sum(per_cumUS_2009>0)/1000
+p2012 <- sum(per_cumUS_2012>0)/1000
+p2014 <- sum(per_cumUS_2014>0)/1000
+
+relp2009 <- sum(rel_US_2009>0)/1000
+relp2012 <- sum(rel_US_2012>0)/1000
+relp2014 <- sum(rel_US_2014>0)/1000
+
+############
 
 df2009<-data.frame(State=rowtable_names,
                    cum_effect=round(effect_cum_0509[,1],3),
@@ -207,44 +247,57 @@ df2014<-data.frame(State=rowtable_names,
                    bi_pval=effect_cum_0514[,11]
 )
 
-res_2009 <- rma(yi = cum_effect, sei = sd, data = df2009, method = "REML")
-s_res2009 <- summary(res_2009)
-
-res_2012 <- rma(yi = cum_effect, sei = sd, data = df2012, method = "REML")
-s_res2012 <- summary(res_2012)
-
-res_2014 <- rma(yi = cum_effect, sei = sd, data = df2014, method = "REML")
-s_res2014 <- summary(res_2014)
-
-res_2009_rel <- rma(yi = cum_effect_rel, sei = sd_rel, data = df2009, method = "REML")
-s_res2009_rel <-summary(res_2009_rel)
-
-res_2012_rel <- rma(yi = cum_effect_rel, sei = sd_rel, data = df2012, method = "REML")
-s_res2012_rel <- summary(res_2012_rel)
-
-res_2014_rel <- rma(yi = cum_effect_rel, sei = sd_rel, data = df2014, method = "REML")
-s_res2014_rel <- summary(res_2014_rel)
-
-table1<-rbind(cbind(paste0(round(res_2009$beta,3),ifelse(res_2009$pval<0.001,"***",ifelse(res_2009$pval<0.01,"**",ifelse(res_2009$pval<0.05,"*","")))),
-                    paste0(round(res_2009_rel$beta*100,3),ifelse(res_2009_rel$pval<0.001,"***",ifelse(res_2009_rel$pval<0.01,"**",ifelse(res_2009_rel$pval<0.05,"*","")))),
-                    paste0(round(res_2012$beta,3),ifelse(res_2012$pval<0.001,"***",ifelse(res_2012$pval<0.01,"**",ifelse(res_2012$pval<0.05,"*","")))),
-                    paste0(round(res_2012_rel$beta*100,3),ifelse(res_2012_rel$pval<0.001,"***",ifelse(res_2012_rel$pval<0.01,"**",ifelse(res_2012_rel$pval<0.05,"*","")))),
-                    paste0(round(res_2014$beta,3),ifelse(res_2014$pval<0.001,"***",ifelse(res_2014$pval<0.01,"**",ifelse(res_2014$pval<0.05,"*","")))),
-                    paste0(round(res_2014_rel$beta*100,3),ifelse(res_2014_rel$pval<0.001,"***",ifelse(res_2014_rel$pval<0.01,"**",ifelse(res_2014_rel$pval<0.05,"*",""))))),
-              cbind(round(res_2009$se,3),round(res_2009_rel$se,3),
-                    round(res_2012$se,3),round(res_2012_rel$se,3),
-                    round(res_2014$se,3),round(res_2014_rel$se,3)))
+# res_2009 <- rma(yi = cum_effect, sei = sd, data = df2009, method = "REML")
+# s_res2009 <- summary(res_2009)
+# 
+# res_2012 <- rma(yi = cum_effect, sei = sd, data = df2012, method = "REML")
+# s_res2012 <- summary(res_2012)
+# 
+# res_2014 <- rma(yi = cum_effect, sei = sd, data = df2014, method = "REML")
+# s_res2014 <- summary(res_2014)
+# 
+# res_2009_rel <- rma(yi = cum_effect_rel, sei = sd_rel, data = df2009, method = "REML")
+# s_res2009_rel <-summary(res_2009_rel)
+# 
+# res_2012_rel <- rma(yi = cum_effect_rel, sei = sd_rel, data = df2012, method = "REML")
+# s_res2012_rel <- summary(res_2012_rel)
+# 
+# res_2014_rel <- rma(yi = cum_effect_rel, sei = sd_rel, data = df2014, method = "REML")
+# s_res2014_rel <- summary(res_2014_rel)
+# 
+# table1<-rbind(cbind(paste0(round(res_2009$beta,3),ifelse(res_2009$pval<0.001,"***",ifelse(res_2009$pval<0.01,"**",ifelse(res_2009$pval<0.05,"*","")))),
+#                     paste0(round(res_2009_rel$beta*100,3),ifelse(res_2009_rel$pval<0.001,"***",ifelse(res_2009_rel$pval<0.01,"**",ifelse(res_2009_rel$pval<0.05,"*","")))),
+#                     paste0(round(res_2012$beta,3),ifelse(res_2012$pval<0.001,"***",ifelse(res_2012$pval<0.01,"**",ifelse(res_2012$pval<0.05,"*","")))),
+#                     paste0(round(res_2012_rel$beta*100,3),ifelse(res_2012_rel$pval<0.001,"***",ifelse(res_2012_rel$pval<0.01,"**",ifelse(res_2012_rel$pval<0.05,"*","")))),
+#                     paste0(round(res_2014$beta,3),ifelse(res_2014$pval<0.001,"***",ifelse(res_2014$pval<0.01,"**",ifelse(res_2014$pval<0.05,"*","")))),
+#                     paste0(round(res_2014_rel$beta*100,3),ifelse(res_2014_rel$pval<0.001,"***",ifelse(res_2014_rel$pval<0.01,"**",ifelse(res_2014_rel$pval<0.05,"*",""))))),
+#               cbind(round(res_2009$se,3),round(res_2009_rel$se,3),
+#                     round(res_2012$se,3),round(res_2012_rel$se,3),
+#                     round(res_2014$se,3),round(res_2014_rel$se,3)))
+# colnames(table1)<-c("2005-2009","2005-2009 rel",
+#                     "2005-2012","2005-2012 rel",
+#                     "2005-2014","2005-2014 rel")
+# rownames(table1)<-c("effect","S.E.")
+# 
+# saveRDS(s_res2009, file = paste0(project.dir,"/main_results/meta_analysis_20052009_commercial.rds"))
+# saveRDS(s_res2012, file = paste0(project.dir,"/main_results/meta_analysis_20052012_commercial.rds"))
+# saveRDS(s_res2014, file = paste0(project.dir,"/main_results/meta_analysis_20052014_commercial.rds"))
+# saveRDS(s_res2009_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052009_commercial.rds"))
+# saveRDS(s_res2012_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052012_commercial.rds"))
+# saveRDS(s_res2014_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052014_commercial.rds"))
+table1<-rbind(cbind(paste0(round(mean(per_cumUS_2009),3),ifelse(p2009<0.001,"***",ifelse(p2009<0.01,"**",ifelse(p2009<0.05,"*","")))),
+                    paste0(round(mean(rel_US_2009)*100,3),ifelse(relp2009<0.001,"***",ifelse(relp2009<0.01,"**",ifelse(relp2009<0.05,"*","")))),
+                    paste0(round(mean(per_cumUS_2012),3),ifelse(p2012<0.001,"***",ifelse(p2012<0.01,"**",ifelse(p2012<0.05,"*","")))),
+                    paste0(round(mean(rel_US_2012)*100,3),ifelse(relp2012<0.001,"***",ifelse(relp2012<0.01,"**",ifelse(relp2012<0.05,"*","")))),
+                    paste0(round(mean(per_cumUS_2014),3),ifelse(p2014<0.001,"***",ifelse(p2014<0.01,"**",ifelse(p2014<0.05,"*","")))),
+                    paste0(round(mean(rel_US_2014)*100,3),ifelse(relp2014<0.001,"***",ifelse(relp2014<0.01,"**",ifelse(relp2014<0.05,"*",""))))),
+              cbind(round(sd(per_cumUS_2009),3),round(sd(rel_US_2009),3),
+                    round(sd(per_cumUS_2012),3),round(sd(rel_US_2012),3),
+                    round(sd(per_cumUS_2014),3),round(sd(rel_US_2014),3)))
 colnames(table1)<-c("2005-2009","2005-2009 rel",
                     "2005-2012","2005-2012 rel",
                     "2005-2014","2005-2014 rel")
 rownames(table1)<-c("effect","S.E.")
-
-saveRDS(s_res2009, file = paste0(project.dir,"/main_results/meta_analysis_20052009_commercial.rds"))
-saveRDS(s_res2012, file = paste0(project.dir,"/main_results/meta_analysis_20052012_commercial.rds"))
-saveRDS(s_res2014, file = paste0(project.dir,"/main_results/meta_analysis_20052014_commercial.rds"))
-saveRDS(s_res2009_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052009_commercial.rds"))
-saveRDS(s_res2012_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052012_commercial.rds"))
-saveRDS(s_res2014_rel, file = paste0(project.dir,"/main_results/meta_analysis_rel_20052014_commercial.rds"))
 saveRDS(table1, file = paste0(project.dir,"/tables/TableS2_commercial.rds"))
 
 ### Table for the supplementary material
@@ -292,20 +345,18 @@ print(doc, target = paste0(project.dir,"/tables/TableS6.docx"))
 states <- rbind(matrix(df2009$State,ncol=1),"U.S.")
 df_boxplot<- data.frame(States = rep(states,3), 
                         Period = rep(c("2005-2009","2005-2012","2005-2014"),each=49),
-                        effect = rbind(rbind(as.matrix(df2009$cum_effect_rel,ncol=1),as.numeric(res_2009_rel$beta)),
-                                       rbind(as.matrix(df2012$cum_effect_rel,ncol=1),as.numeric(res_2012_rel$beta)),
-                                       rbind(as.matrix(df2014$cum_effect_rel,ncol=1),as.numeric(res_2014_rel$beta))),
-                        sd_effect = rbind(rbind(as.matrix(df2009$sd_rel,ncol=1),as.numeric(res_2009_rel$se)),
-                                          rbind(as.matrix(df2012$sd_rel,ncol=1),as.numeric(res_2012_rel$se)),
-                                          rbind(as.matrix(df2014$sd_rel,ncol=1),as.numeric(res_2014_rel$se))))
-
-
+                        rel_effect = rbind(rbind(as.matrix(df2009$cum_effect_rel,ncol=1),as.numeric(mean(rel_US_2009))),
+                                           rbind(as.matrix(df2012$cum_effect_rel,ncol=1),as.numeric(mean(rel_US_2012))),
+                                           rbind(as.matrix(df2014$cum_effect_rel,ncol=1),as.numeric(mean(rel_US_2014)))),
+                        sd_rel_effect = rbind(rbind(as.matrix(df2009$sd_rel,ncol=1),as.numeric(sd(rel_US_2009))),
+                                              rbind(as.matrix(df2012$sd_rel,ncol=1),as.numeric(sd(rel_US_2009))),
+                                              rbind(as.matrix(df2014$sd_rel,ncol=1),as.numeric(sd(rel_US_2009)))))
 
 summary_df <- df_boxplot %>%
   rename(State = States, 
          Year = Period, 
-         mean = effect, 
-         se = sd_effect) %>%
+         mean = rel_effect, 
+         se = sd_rel_effect) %>%
   mutate(
     lower = mean - 1.96 * se,
     upper = mean + 1.96 * se
@@ -334,9 +385,9 @@ ggplot(summary_df, aes(x = State, y = mean, color = Year, group = Year)) +
        y = expression(paste(Delta,"%")),
        color = "Evaluation period") +
   scale_color_manual(values = okabe_ito[1:length(unique(summary_df$Year))]) +
-  scale_y_continuous(labels = percent) +
+  scale_y_continuous(limits= c(-1,2), labels = percent) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         legend.position = "bottom"
-  )
+  ) 
 dev.off()
